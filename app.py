@@ -89,9 +89,6 @@ def server(input, output, session):
     chat1 = ui.Chat(id="chat1", messages=stream1, tokenizer=None)
     chat2 = ui.Chat(id="chat2", messages=stream2, tokenizer=None)
 
-    # Define a callback to run when the user submits a message
-    # @chat.on_user_submit
-
     @reactive.Effect
     @reactive.event(input.submit_btn)
     async def respond():
@@ -127,7 +124,9 @@ def server(input, output, session):
         """Erase all content from every chat stream"""
         chats = [chat0, chat1, chat2]
         streams = [stream0, stream1, stream2]
-        for chat in chats:
+        for i, chat in enumerate(chats):
             await chat.clear_messages()
+            streams[i] = streams[i][0:2]
+            await chat.append_message(streams[i][-1])
 
 app = App(app_ui, server)
