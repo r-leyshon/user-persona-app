@@ -45,8 +45,8 @@ for stream in streams:
 
 # ui ----------------------------------------------------------------------
 app_ui = ui.page_fillable(
-    ui.panel_title("Experiment with User Personas"),
     ui.div(
+        ui.panel_title("Experiment with User Personas"),
         ui.row(
             ui.div(
                 ui.input_text_area(
@@ -67,10 +67,11 @@ app_ui = ui.page_fillable(
                 class_="d-flex gap-2",
             ),
             ),
-    style="position: sticky; top: 0px; z-index: 1000; background: white;",
+    style="position: fixed !important; top: 0px; z-index: 1000; background: white; width: 100%;",
     ),
     ui.row(
-        *[ui.column(4, ui.chat_ui(id=f"chat{i}", placeholder="Chat appears above ^")) for i in range(0, 3)]
+        *[ui.column(4, ui.chat_ui(id=f"chat{i}", placeholder="Chat appears above ^")) for i in range(0, 3)],
+        style="margin-top: 100px;"
     ),
     ui.tags.script("""
         document.addEventListener('DOMContentLoaded', function() {
@@ -100,9 +101,6 @@ def server(input, output, session):
         stream0.append({"role": "user", "content": input.user_txt()})
         stream1.append({"role": "user", "content": input.user_txt()})
         stream2.append({"role": "user", "content": input.user_txt()})
-        await chat0.append_message_stream(input.user_txt())
-        await chat1.append_message_stream(input.user_txt())
-        await chat2.append_message_stream(input.user_txt())
 
         response0 = await openai_client.chat.completions.create(
             model="chatgpt-4o-latest",
