@@ -50,13 +50,18 @@ app_ui = ui.page_fillable(
         ui.row(
             ui.div(
                 ui.input_text_area(
-                    id=f"user_txt",
+                    id="user_txt",
                     label="",
                     placeholder="Type your prompt here then submit..."
                     ),
                 ui.input_action_button(
-                    id=f"submit_btn",
+                    id="submit_btn",
                     label="Submit",
+                    style="margin-top:0px;margin-bottom:15px;"
+                    ),
+                ui.input_action_button(
+                    id="flush_chats",
+                    label="Clear Chats",
                     style="margin-top:0px;margin-bottom:15px;"
                     ),
                 class_="d-flex gap-2",
@@ -117,5 +122,14 @@ def server(input, output, session):
         await chat0.append_message_stream(response0)
         await chat1.append_message_stream(response1)
         await chat2.append_message_stream(response2)
+
+    @reactive.Effect
+    @reactive.event(input.flush_chats)
+    async def clear_chats():
+        """Erase all content from every chat stream"""
+        chats = [chat0, chat1, chat2]
+        streams = [stream0, stream1, stream2]
+        for chat in chats:
+            await chat.clear_messages()
 
 app = App(app_ui, server)
