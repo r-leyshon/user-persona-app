@@ -28,8 +28,10 @@ stream1 = []
 stream2 = []
 streams = [stream0, stream1, stream2]
 
+selected_personas = []
 for stream in streams:
     persona = random.choice(personas)
+    selected_personas.append(persona)
     # remove the chosen persona so that it only appears once
     for i, pers in enumerate(personas):
         if pers == persona:
@@ -42,6 +44,7 @@ for stream in streams:
     stream.append(
         {"role": "assistant", "content": persona.get("greeting")}
         )
+print(selected_personas)
 
 # ui ----------------------------------------------------------------------
 app_ui = ui.page_fillable(
@@ -70,7 +73,18 @@ app_ui = ui.page_fillable(
     style="position: fixed !important; top: 0px; z-index: 1000; background: white; width: 100%;",
     ),
     ui.row(
-        *[ui.column(4, ui.chat_ui(id=f"chat{i}", placeholder="Chat appears above ^")) for i in range(0, 3)],
+        *[
+            ui.column(
+                4,
+                ui.accordion(
+                    ui.accordion_panel(
+                        "Persona Details",
+                        ui.input_text_area(id=f"persona_input_{i}", label=None, value=selected_personas[i].get("persona"), width="100%", height="150px"),
+                        ),
+                ),
+                ui.chat_ui(id=f"chat{i}", placeholder="Chat appears above ^")
+            ) for i in range(0, 3)
+            ],
         style="margin-top: 100px;"
     ),
     ui.tags.script("""
