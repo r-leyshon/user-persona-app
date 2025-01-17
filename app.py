@@ -10,7 +10,7 @@ from scripts.personas import personas
 # before ------------------------------------------------------------------
 secrets = dotenv_values(here(".env"))
 openai_key = secrets["OPENAI_KEY"]
-openai_client = openai.AsyncOpenAI(api_key=openai_key)
+openai_client = openai.OpenAI(api_key=openai_key)
 SYS_PROMPT = """
 You are a helpful assistant working with the user to identify user
 requirements and to edit text according to those needs. The name and
@@ -79,7 +79,14 @@ app_ui = ui.page_fillable(
                 ui.accordion(
                     ui.accordion_panel(
                         "Persona Details",
-                        ui.input_text_area(id=f"persona_input_{i}", label=None, value=selected_personas[i].get("persona"), width="100%", height="150px"),
+                        ui.input_text_area(
+                            id=f"persona_input_{i}",
+                            label=None,
+                            value=selected_personas[i].get("persona"),
+                            width="100%",
+                            height="150px"
+                            ),
+                        ui.input_action_button(id=f"persona_update_btn_{i}", label="Update Persona"),
                         ),
                 ),
                 ui.chat_ui(id=f"chat{i}", placeholder="Chat appears above ^")
@@ -111,17 +118,17 @@ def server(input, output, session):
         usr_prompt = input.user_txt()
         [stream.append({"role": "user", "content": input.user_txt()}) for stream in streams]
 
-        response0 = await openai_client.chat.completions.create(
+        response0 = openai_client.chat.completions.create(
             model="chatgpt-4o-latest",
             messages=stream0,
             stream=True,
         )
-        response1 = await openai_client.chat.completions.create(
+        response1 = openai_client.chat.completions.create(
             model="chatgpt-4o-latest",
             messages=stream1,
             stream=True,
         )
-        response2 = await openai_client.chat.completions.create(
+        response2 = openai_client.chat.completions.create(
             model="chatgpt-4o-latest",
             messages=stream2,
             stream=True,
@@ -141,5 +148,68 @@ def server(input, output, session):
             await chat.clear_messages()
             streams[i] = streams[i][0:2]
             await chat.append_message(streams[i][-1])
+
+
+    @reactive.Effect
+    @reactive.event(input.persona_update_btn_0)
+    async def update_persona_0():
+        """Update the persona for chat stream 0"""
+        new_persona = input.persona_input_0()
+        new_sys_prompt = SYS_PROMPT.format(name="", persona=new_persona)
+        stream0.clear()
+        stream0.append({"role": "system", "content": new_sys_prompt})
+        response = openai_client.chat.completions.create(
+            model="chatgpt-4o-latest",
+            messages=stream0,
+            stream=True,
+        )
+        await chat0.append_message_stream(response)
+        stream0.append(
+            {"role": "assistant",
+            "content": "Hi there! I've updated my persona."
+            }
+        )
+
+    @reactive.Effect
+    @reactive.event(input.persona_update_btn_1)
+    async def update_persona_1():
+        """Update the persona for chat stream 1"""
+        new_persona = input.persona_input_1()
+        new_sys_prompt = SYS_PROMPT.format(name="", persona=new_persona)
+        stream1.clear()
+        stream1.append({"role": "system", "content": new_sys_prompt})
+        response = openai_client.chat.completions.create(
+            model="chatgpt-4o-latest",
+            messages=stream1,
+            stream=True,
+        )
+        await chat1.append_message_stream(response)
+        stream1.append(
+            {"role": "assistant",
+            "content": "Hi there! I've updated my persona."
+            }
+        )
+
+
+    @reactive.Effect
+    @reactive.event(input.persona_update_btn_2)
+    async def update_persona_2():
+        """Update the persona for chat stream 2"""
+        new_persona = input.persona_input_2()
+        new_sys_prompt = SYS_PROMPT.format(name="", persona=new_persona)
+        stream2.clear()
+        stream2.append({"role": "system", "content": new_sys_prompt})
+        response = openai_client.chat.completions.create(
+            model="chatgpt-4o-latest",
+            messages=stream2,
+            stream=True,
+        )
+        await chat2.append_message_stream(response)
+        stream2.append(
+            {"role": "assistant",
+            "content": "Hi there! I've updated my persona as requested."
+            }
+        )
+
 
 app = App(app_ui, server)
