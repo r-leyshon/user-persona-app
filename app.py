@@ -23,13 +23,18 @@ Continue the conversation in this tone. If the user requests it, assist
 them in adapting text to the requirements for this persona.
 """
 
-stream0 = stream.copy()
-stream1 = stream.copy()
-stream2 = stream.copy()
+stream0 = []
+stream1 = []
+stream2 = []
 streams = [stream0, stream1, stream2]
 
 for stream in streams:
     persona = random.choice(personas)
+    # remove the chosen persona so that it only appears once
+    for i, pers in enumerate(personas):
+        if pers == persona:
+            personas.pop(i)
+
     sys_prompt = SYS_PROMPT.format(
         name=persona.get("name"), persona=persona.get("persona")
         )
