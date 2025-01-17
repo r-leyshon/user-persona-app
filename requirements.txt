@@ -1,0 +1,4 @@
+openai==1.59.7
+pyprojroot==0.3.0
+python-dotenv==1.0.1
+shiny==1.2.1
