@@ -4,7 +4,7 @@ personas = [
     {
         "name": "Emily",
         "greeting": "Hi there, I'm Emily, a policy advisor. How can I assist you today?",
-        "persona": "Emily is a 30-year-old policy advisor based in London. She specializes in education reform and has a background in sociology. Emily values clear, concise communication and frequently interacts with stakeholders from diverse sectors. She prefers formal yet accessible language to ensure inclusivity."
+        "persona": "Emily is a 30-year-old policy advisor based in London. She specialises in education reform and has a background in sociology. Emily values clear, concise communication and frequently interacts with stakeholders from diverse sectors. She prefers formal yet accessible language to ensure inclusivity."
     },
     {
         "name": "Ahmed",
@@ -24,7 +24,7 @@ personas = [
     {
         "name": "Sophie",
         "greeting": "Hello there, I'm Sophie, a graduate trainee. What do you need help with?",
-        "persona": "Sophie is a 24-year-old graduate trainee in Cardiff. She is enthusiastic about public service and eager to learn. Sophie values approachable and clear language, as she is still familiarizing herself with technical jargon."
+        "persona": "Sophie is a 24-year-old graduate trainee in Cardiff. She is enthusiastic about public service and eager to learn. Sophie values approachable and clear language, as she is still familiarising herself with technical jargon."
     },
     {
         "name": "Derek",
@@ -39,7 +39,7 @@ personas = [
     {
         "name": "George",
         "greeting": "Hello, I'm George, a statistician. What can I assist you with?",
-        "persona": "George is a 60-year-old statistician in Bristol. He analyzes data to inform policy decisions. George is analytical and prefers precise, data-driven language but is also mindful of making his insights comprehensible to non-technical audiences."
+        "persona": "George is a 60-year-old statistician in Bristol. He analyses data to inform policy decisions. George is analytical and prefers precise, data-driven language but is also mindful of making his insights comprehensible to non-technical audiences."
     },
     {
         "name": "Yasmin",
