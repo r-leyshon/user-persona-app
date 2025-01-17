@@ -88,16 +88,14 @@ def server(input, output, session):
     chat0 = ui.Chat(id="chat0", messages=stream0, tokenizer=None)
     chat1 = ui.Chat(id="chat1", messages=stream1, tokenizer=None)
     chat2 = ui.Chat(id="chat2", messages=stream2, tokenizer=None)
+    chats = [chat0, chat1, chat2]
 
     @reactive.Effect
     @reactive.event(input.submit_btn)
     async def respond():
         """Logic for handling prompts & appending to chat stream."""
         usr_prompt = input.user_txt()
-
-        stream0.append({"role": "user", "content": input.user_txt()})
-        stream1.append({"role": "user", "content": input.user_txt()})
-        stream2.append({"role": "user", "content": input.user_txt()})
+        [stream.append({"role": "user", "content": input.user_txt()}) for stream in streams]
 
         response0 = await openai_client.chat.completions.create(
             model="chatgpt-4o-latest",
@@ -114,9 +112,10 @@ def server(input, output, session):
             messages=stream2,
             stream=True,
         )
-        await chat0.append_message_stream(response0)
-        await chat1.append_message_stream(response1)
-        await chat2.append_message_stream(response2)
+        responses = [response0, response1, response2]
+        for i, chat in enumerate(chats):
+            await chat.append_message_stream(responses[i])
+
 
     @reactive.Effect
     @reactive.event(input.flush_chats)
